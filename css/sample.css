@@ -56,6 +56,8 @@ footer{
 }
 .kind{
     width: 100px;
+    /* padding: 10px 0;
+    box-sizing: border-box; */
     margin: 0 0 15px 15px;
     font-size: 50%;
 
@@ -101,10 +103,26 @@ li{
 
     cursor: pointer;
 }
-li:last-of-type{
-    border: 1px solid #666;
-}
 li:hover{
     background: rgb(230, 230, 230);
+}
+li:last-of-type{
+    background-color: rgb(160, 160, 160);
+    border: 1px solid #666;
+    
+    font-weight: bold;
+}
+
+li:last-of-type:hover{
+    background: rgb(253, 145, 145);
+}
+.back_menu{
+    width: 100px;
+    /* padding: 10px 0;
+    box-sizing: border-box; */
+    margin: 0 auto;
+    font-size: 50%;
+
+    cursor: pointer;
 }
 

@@ -32,11 +32,16 @@
         </div>
         <ul>
             <!-- 理想はcanvasとメモを両方実現できるようにすること -->
-            <li id="new">新規登録</li>
+            <li id="new">書き換え</li>
+            <li id="renew" style="display:none;">更新</li>
             <li id="save">保存</li>
-            <li id="clear">消去</li>
             <!-- 理想は保存する物事にnameをつけて、それを呼び出せるようにしたい -->
-            <li id="back">前に戻る</li>
+            <li id="back">
+                <p>メモ一覧</p>
+                <select class="back_menu" id="back_menu" name="back" style="display:none;">
+                </select>
+            </li>
+            <li id="clear">リセット</li>
         </ul>
 
     </main>
@@ -48,65 +53,102 @@
     <script>
         $("body").fadeIn(3000);
         let save_count = 0;
-
         $("#save").on("click",function(){
             save_count ++;
             const name = $("#name").val();
             const title = $("#title").val();
             const kind = $("#kind").val();
             const text_area = $("#text_area").val();
-            let memo_info = [{
-                    "name" : name,
-                    "title" : title,
-                    "kind" : kind,
-                    "text_area" : text_area
-                }];
-            // データに順番をつけるときに使う
-            // let c = "memo"+save_count;
-            // 登録順に記録するための処理
-            // memoinfoだとobject形式になっている
-            console.dir(memo_info);
-            let m = JSON.stringify(memo_info);
-            // json形式に修正をする
-            console.log(m);
-            localStorage.setItem("memo",m);
-            alert("saveしました");
+            if (name!="" && title!="" && kind!="" && text_area!=""){
+                let memo_info = {
+                        "name":name,
+                        "title":title,
+                        "kind":kind,
+                        "text_area":text_area
+                    };
+                let m = JSON.stringify(memo_info);
+                let c = "memo"+save_count;
+                localStorage.setItem(c , m);
+                // backに選択肢作成
+                $("#back_menu").append($('<option>').html(c).val(c));
+                alert("saveしました");
+                $("#name").val("");
+                $("#title").val("");
+                $("#kind").val("メモ");
+                $("#text_area").val("");
+            }
         });
+
+        //2.clear処理、一括削除する
+        // どのファイルを削除するかどうかの選択ができる状態にする必要がある、追加登録機能にちかい
+        $("#clear").on("click",function(){
+            localStorage.clear();
+            $("#text_area").val("");
+            $("#back>p").css("display","block");
+            $("#back_menu").css("display","none");
+            alert("deleteしました");
+        });
+
+        // 3.更新とその後の保存のところがレイアウト崩れが起きる
+        $("#back").on("click",function(){
+            $("#back>p").css("display","none");
+            $("#back_menu").css("display","block");
+
+            $("#back").change(function(){
+                const b = $("#back_menu").val();
+                console.log(b)
+                const json = localStorage.getItem(b);
+                let back_info = JSON.parse(json);
+                $("#name").val(back_info.name);
+                $("#title").val(back_info.title);
+                $("#kind").val(back_info.kind);
+                $("#text_area").val(back_info.text_area);   
+                // メモ一覧を押したときだけ更新を出現する
+                $("#renew").css("display","block");
+                $("#save").css("display","none");
+                $("#renew").on("click",function(){
+                    const name = $("#name").val();
+                    const title = $("#title").val();
+                    const kind = $("#kind").val();
+                    const text_area = $("#text_area").val();
+                    let memo_info = {
+                        "name":name,
+                        "title":title,
+                        "kind":kind,
+                        "text_area":text_area
+                    };
+                    let m = JSON.stringify(memo_info);
+                    localStorage.setItem(b , m);
+                    $("#name").val("");
+                    $("#title").val("");
+                    $("#kind").val("メモ");
+                    $("#text_area").val("");
+                    $("#renew").css("display","none");
+                    $("#save").css("display","block");
+                    $("#back>p").css("display","block");
+                    $("#back_menu").css("display","none");
+                    alert("更新しました");
+                });
+
+            });
+
+        });
+  
+        //5.新規登録時は、更新したページなどを消せるようにする
         // 名前などの入力欄に一斉削除ボタンがあればいいかも
         $("#new").on("click",function(){
             $("#name").val("");
             $("#title").val("");
             $("#kind").val("メモ");
             $("#text_area").val("");
+            $("#back>p").css("display","block");
+            $("#back_menu").css("display","none");
         });
 
-        //2.clear クリックイベント
-        // どのファイルを削除するかどうかの選択ができる状態にする必要がある、追加登録機能にちかい
-        $("#clear").on("click",function(){
-            localStorage.removeItem("memo");
-            $("#text_area").val("");
-            alert("deleteしました");
+        //4.ページ読み込み：保存データ取得表示
+         $(function(){
+            localStorage.clear();
         });
-
-        if(localStorage.getItem("memo")){
-            const json = localStorage.getItem("memo");
-            let reload_info = JSON.parse(json);
-            $("#name").val((reload_info).name);
-            $("#title").val((reload_info).title);
-            $("#kind").val((reload_info).kind);
-            $("#text_area").val((reload_info).text_area);
-        }
-
-
-
-
-        //3.ページ読み込み：保存データ取得表示
-
-
-
-
-        //ロード時に表示
-        //※こんなこともできる例
     </script>
 </body>
 
