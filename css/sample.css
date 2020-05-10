@@ -1,51 +1,110 @@
+/* 骨組みの記載 */
 body{
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+
     margin:0;
-    padding:0;
-    text-align:left;
+    padding:50px 0;
+
     font-size: 32px;
 }
+
 header{
+    margin-bottom: 30px;
+
     background-color: #fff;
-    border-bottom: 1px solid #ccc;
     text-align: center;
+
+    font-weight: bold;
 }
 main{
-    border-bottom:1px solid #ccc;
     position:relative;
 }
 footer{
+    position: absolute;
+    bottom: 0;
+
     background-color: #fff;
     border-bottom:1px solid #ccc;
     text-align: center;
 }
-p{
-    font-size:200%;
-    text-align: center;
-    border-bottom:1px solid #fff;
-    height:200px;
+
+/* テキストエリアに関する記載 */
+.memo{
+    width: 75%;
+    margin: 0 auto 30px;
+
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+
 }
-ul{
-    padding: 0;
-    border-top: 1px solid #000000;
-    display:table;  /* 定義 */
-    table-layout: fixed;
-    width:100%;
+.midashi{
+    display: flex;
+    justify-content: left;
+    align-items: center;
 }
-li{
-    list-style-type:none;
-    border: 1px solid #666;
-    background-color: #FFF;
-    display:table-cell;  /* 定義 */
+.title,.name{
+    width: 25%;
+    margin: 0 0 15px;
+    padding: 5px;
+    box-sizing: border-box;
+    box-shadow: 1px 1px 1px 1px #555;
+    
+    font-size: 50%;
+}
+.kind{
+    width: 100px;
+    margin: 0 0 15px 15px;
+    font-size: 50%;
+
     cursor: pointer;
 }
+.kind>option{    
+    font-size: 50%;
+}
+.text_area{
+    width: 100%;
+    height: 500px;
+    padding: 5px;
+    margin: auto;
+    box-sizing: border-box;
+    box-shadow: 1px 1px 1px 1px #555;
+
+    font-size:55%;
+}
+
+/* ボタン周辺に関する記載 */
+ul{
+    width:50%;
+    display:table;  /* 定義 */
+    table-layout: fixed;
+
+    margin: 0 auto;
+    padding: 0; 
+    
+    text-align: center;
+}
+/* 理想はtablecellに隙間を作りたい */
+li{
+    padding: 10px 0; 
+    border: 1px solid #666;
+    /* 重複を消す処理 */
+    border-right: 0px;
+
+    display:table-cell;  /* 定義 */
+    background-color: #FFF;
+    
+    list-style-type:none;
+    font-size: 1vw;
+
+    cursor: pointer;
+}
+li:last-of-type{
+    border: 1px solid #666;
+}
 li:hover{
-    background: #0066CC;
-    color:#fff;
+    background: rgb(230, 230, 230);
 }
-textarea{
-  margin: 3%;
-  width: 95%;
-  height: 230px;
-  font-size:80%;
-  box-shadow: 3px 3px 3px 3px #555;
-}
+

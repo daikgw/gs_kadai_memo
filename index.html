@@ -5,39 +5,83 @@
     <meta charset="UTF-8">
     <title>myMemoPad</title>
     <!-- <script src="js/jquery-2.1.3.min.js"></script> -->
+    <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/sample.css">
 </head>
 
-<body>
-
+<body style="display:none;">
+    <!-- 最終は数を測定できるといいかも -->
     <header>
-        <h1>MemoPad</h1>
+        <h1>メモ帳</h1>
     </header>
 
-    <main style="display:none;">
-
-        <textarea id="text_area"></textarea>
+    <main>
+        <div class="memo">
+            <!-- textareaの背景に影文字を入れる -->
+            <textarea class="name" id="name" placeholder="氏名" cols="15" rows="1" maxlength="15"></textarea>
+            <div class="midashi">
+                <textarea class="title" id="title" placeholder="タイトル" cols="15" rows="1" maxlength="15"></textarea>
+                <!-- canvas対応用のセレクトボックス、また理想は初期値は選択してくださいにする -->
+                <select class="kind" id="kind" name="kind">
+                    <option value="メモ" selected>メモ</option>
+                    <option value="絵画">絵画</option>
+                </select>
+            </div>
+            <!-- 上限値を設定してないので超えた時の処理についても考える必要はあり -->
+            <textarea class="text_area" id="text_area" placeholder="入力はこちらです"></textarea>
+        </div>
         <ul>
-            <li id="save">Save</li>
-            <li id="clear">Clear</li>
+            <!-- 理想はcanvasとメモを両方実現できるようにすること -->
+            <li id="new">新規登録</li>
+            <li id="save">保存</li>
+            <li id="clear">消去</li>
+            <!-- 理想は保存する物事にnameをつけて、それを呼び出せるようにしたい -->
+            <li id="back">前に戻る</li>
         </ul>
 
     </main>
 
     <footer><small>G's</small></footer>
 
+    <!-- jQueryの読み込み -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script>
-        $("main").fadeIn(1000);
-        //1.Save クリックイベント
+        $("body").fadeIn(3000);
+        let save_count = 0;
+
         $("#save").on("click",function(){
-            const value = $("#text_area").val();
-            console.log(value);
-            localStorage.setItem("memo",value);
+            save_count ++;
+            const name = $("#name").val();
+            const title = $("#title").val();
+            const kind = $("#kind").val();
+            const text_area = $("#text_area").val();
+            let memo_info = [{
+                    "name" : name,
+                    "title" : title,
+                    "kind" : kind,
+                    "text_area" : text_area
+                }];
+            // データに順番をつけるときに使う
+            // let c = "memo"+save_count;
+            // 登録順に記録するための処理
+            // memoinfoだとobject形式になっている
+            console.dir(memo_info);
+            let m = JSON.stringify(memo_info);
+            // json形式に修正をする
+            console.log(m);
+            localStorage.setItem("memo",m);
             alert("saveしました");
+        });
+        // 名前などの入力欄に一斉削除ボタンがあればいいかも
+        $("#new").on("click",function(){
+            $("#name").val("");
+            $("#title").val("");
+            $("#kind").val("メモ");
+            $("#text_area").val("");
         });
 
         //2.clear クリックイベント
+        // どのファイルを削除するかどうかの選択ができる状態にする必要がある、追加登録機能にちかい
         $("#clear").on("click",function(){
             localStorage.removeItem("memo");
             $("#text_area").val("");
@@ -45,8 +89,12 @@
         });
 
         if(localStorage.getItem("memo")){
-            const value = localStorage.getItem("memo");
-            $("#text_area").val(value);
+            const json = localStorage.getItem("memo");
+            let reload_info = JSON.parse(json);
+            $("#name").val((reload_info).name);
+            $("#title").val((reload_info).title);
+            $("#kind").val((reload_info).kind);
+            $("#text_area").val((reload_info).text_area);
         }
 
 
